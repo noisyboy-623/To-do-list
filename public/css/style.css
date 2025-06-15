@@ -124,3 +124,7 @@ button:hover {
     transform: scale(1.05);
     box-shadow: 0 0 8px #00c4b4aa;
 }
+
+.edit-icon{
+    text-decoration: none;
+}

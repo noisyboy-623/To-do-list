@@ -2,25 +2,85 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To Do list</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .edit-icon {
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        select {
+            background-color: #2b2b2b;
+            color: #f0f0f0;
+            border: 1px solid #444;
+            padding: 6px;
+            border-radius: 6px;
+        }
+
+        select:focus {
+            border: 1px solid #03DAC6;
+            outline: none;
+        }
+    </style>
 </head>
 <body>
     <div class="box">
         <h1>To do list</h1>
+        <% if (errorMessage) { %>
+            <div style="color: red;"><%= errorMessage %></div>
+        <% } %>
+        <% if (successMessage) { %>
+            <script>alert("<%= successMessage %>");</script>
+        <% } %>
     </div>
+
     <div class="box">
-        <% for (var i = 0; i < ejes.length; i++) { %>
-            <div class="item">
-                <input type="checkbox">
-                <p><%= ejes[i] %></p>
-            </div>
-        <% } %>       
-    <form action="/" method="POST">
-        <input type="text" name="item" placeholder="Add a new item" >
-        <button type="submit">+</button>
-    </form>
+        <% dayej.forEach(function(items){ %>
+            <form action="/delete" method="post">
+                <div class="item">
+                    <input type="checkbox" name="checked" value="<%= items._id %>" onchange="this.form.submit()">
+                    <p>
+                        <%= items.item %> (<%= items.priority || 'None' %>)
+                        <a href="/edit/<%= items._id %>" class="edit-icon">✏️</a>
+                    </p>
+                </div>
+            </form>
+        <% }) %>
+
+        <% if (editing) { %>
+            <form action="/edit/<%= editing._id %>" method="POST">
+                <input type="text" name="item" value="<%= editing.item %>" placeholder="Edit task">
+                <select name="priority">
+                    <option value="Low" <%= editing.priority === 'Low' ? 'selected' : '' %>>Low</option>
+                    <option value="Medium" <%= editing.priority === 'Medium' ? 'selected' : '' %>>Medium</option>
+                    <option value="High" <%= editing.priority === 'High' ? 'selected' : '' %>>High</option>
+                </select>
+                <button type="submit">Update</button>
+            </form>
+        <% } else { %>
+            <form id="addForm" action="/" method="POST" onsubmit="return validateForm()">
+                <input type="text" id="itemInput" name="item" placeholder="Add a new item">
+                <select name="priority">
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                </select>
+                <button type="submit">+</button>
+            </form>
+        <% } %>
     </div>
+    
+
+    <script>
+        function validateForm() {
+            const input = document.getElementById('itemInput').value.trim();
+            if (input === "") {
+                alert("Please enter a task before submitting.");
+                return false;
+            }
+            return true;
+        }
+    </script>
 </body>
 </html>
