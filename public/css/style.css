@@ -1,0 +1,126 @@
+/* style.css — Compact, Centered, with Visual Effects */
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #121212;
+    background-image: radial-gradient(#2a2a2a 1px, transparent 1px);
+    background-size: 18px 18px;
+    color: #e0e0e0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* Glassmorphism + smooth hover */
+.box {
+    width: 100%;
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 20px;
+    margin: 12px 0;
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* Title styling */
+h1 {
+    font-size: 24px;
+    margin-bottom: 14px;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+/* To-do item rows */
+.item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #444;
+}
+
+.item input[type="checkbox"] {
+    transform: scale(1.4);
+    cursor: pointer;
+    accent-color: #03DAC6;
+    transition: transform 0.2s ease;
+}
+
+.item input[type="checkbox"]:hover {
+    transform: scale(1.6);
+}
+
+.item p {
+    font-size: 18px;
+    color: #cccccc;
+    margin: 0;
+    transition: color 0.3s, text-decoration 0.3s;
+}
+
+.item input[type="checkbox"]:checked + p {
+    text-decoration: line-through;
+    color: #777;
+}
+/* Form input group */
+form {
+    display: flex;
+    justify-content: center;
+    margin-top: 14px;
+}
+
+input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    font-size: 14px;
+    background-color: #2b2b2b;
+    color: #f0f0f0;
+    border: 1px solid #444;
+    border-radius: 10px 0 0 10px;
+    outline: none;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+}
+
+input[type="text"]:focus {
+    border: 1px solid #03DAC6;
+    box-shadow: 0 0 6px #03DAC6aa;
+}
+
+/* Add button */
+button {
+    padding: 10px 16px;
+    background-color: #03DAC6;
+    color: #000;
+    border: none;
+    border-radius: 0 10px 10px 0;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+    background-color: #00c4b4;
+    transform: scale(1.05);
+    box-shadow: 0 0 8px #00c4b4aa;
+}
