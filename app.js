@@ -7,7 +7,7 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb://localhost:27017/todo', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb+srv://todo_user:todo123@cluster0.3eixwtj.mongodb.net/', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const trySchema = new mongoose.Schema({
     item: String,
