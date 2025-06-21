@@ -1,21 +1,29 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const methodOverride = require('method-override');
 
 const app = express();
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
 
-mongoose.connect('mongodb+srv://todo_user:todo123@cluster0.3eixwtj.mongodb.net/', { useNewUrlParser: true, useUnifiedTopology: true });
+// MongoDB connection
+mongoose.connect('mongodb+srv://todo_user:todo123@cluster0.3eixwtj.mongodb.net/', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
 
+// Mongoose schema and model
 const trySchema = new mongoose.Schema({
     item: String,
     priority: String
 });
 const Item = mongoose.model('task', trySchema);
 
-app.get('/', async function (req, res) {
+// GET home
+app.get('/', async (req, res) => {
     try {
         const foundItems = await Item.find({});
         res.render("list", {
@@ -26,11 +34,12 @@ app.get('/', async function (req, res) {
         });
     } catch (err) {
         console.log(err);
-        res.status(500).send("Error retrieving items from database.");
+        res.status(500).send("Error retrieving items.");
     }
 });
 
-app.post("/", async function (req, res) {
+// POST new task
+app.post("/", async (req, res) => {
     const itemName = req.body.item.trim();
     const priority = req.body.priority || "Low";
 
@@ -51,25 +60,25 @@ app.post("/", async function (req, res) {
         res.redirect('/');
     } catch (err) {
         console.log(err);
-        res.status(500).send("Error saving item to database.");
+        res.status(500).send("Error saving item.");
     }
 });
 
-app.post("/delete", async function (req, res) {
-    const itemId = req.body.checked;
+// DELETE task
+app.delete("/delete/:id", async (req, res) => {
     try {
-        await Item.findByIdAndDelete(itemId);
+        await Item.findByIdAndDelete(req.params.id);
         res.redirect('/');
     } catch (err) {
         console.log(err);
-        res.status(500).send("Error deleting item from database.");
+        res.status(500).send("Error deleting item.");
     }
 });
 
-app.get("/edit/:id", async function (req, res) {
-    const taskId = req.params.id;
+// GET edit form
+app.get("/edit/:id", async (req, res) => {
     try {
-        const task = await Item.findById(taskId);
+        const task = await Item.findById(req.params.id);
         const allTasks = await Item.find({});
         res.render("list", {
             dayej: allTasks,
@@ -83,14 +92,14 @@ app.get("/edit/:id", async function (req, res) {
     }
 });
 
-app.post("/edit/:id", async function (req, res) {
-    const taskId = req.params.id;
+// PUT update task
+app.put("/edit/:id", async (req, res) => {
     const newItem = req.body.item.trim();
     const newPriority = req.body.priority;
 
     if (!newItem) {
         const allTasks = await Item.find({});
-        const editing = await Item.findById(taskId);
+        const editing = await Item.findById(req.params.id);
         return res.render("list", {
             dayej: allTasks,
             editing,
@@ -100,7 +109,11 @@ app.post("/edit/:id", async function (req, res) {
     }
 
     try {
-        await Item.findByIdAndUpdate(taskId, { item: newItem, priority: newPriority });
+        await Item.findByIdAndUpdate(req.params.id, {
+            item: newItem,
+            priority: newPriority
+        });
+
         const allTasks = await Item.find({});
         res.render("list", {
             dayej: allTasks,
@@ -114,8 +127,7 @@ app.post("/edit/:id", async function (req, res) {
     }
 });
 
-
-
-app.listen(1627, function () {
+// Start server
+app.listen(1627, () => {
     console.log('Server is running on port 1627');
 });
